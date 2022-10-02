@@ -32,7 +32,7 @@ async def show_dish_types(message: types.Message):
 async def show_dish_on_type(message: types.Message):
     result = await sql_command_select_type(message.text)
     if len(result) == 0:
-        await message.answer('Пока таких блюд не существует добавьте с помощью комманды /reg')
+        await message.answer('Пока на данный момент в этом регионе нет Товаров.')
     else:
         for product in result:
             await bot.send_photo(message.from_user.id, photo=product[1],

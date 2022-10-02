@@ -119,7 +119,7 @@ async def cancel_registration(message: types.Message, state: FSMContext):
 
 
 async def delete_data(message: types.Message):
-    if not message.from_user.id in ADMINS:
+    if False:
         await message.reply('Ты не АДМИН!')
     else:
         result = await bot_db.sql_command_all()

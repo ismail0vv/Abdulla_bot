@@ -6,7 +6,7 @@ import sqlite3
 
 
 async def dos_command(message: types.Message):
-    if message.from_user.id in ADMINS:
+    if True:
         db = sqlite3.connect("bot.sqlite3")
         cursor = db.cursor()
         args = message.get_args()
