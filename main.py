@@ -1,5 +1,5 @@
 from aiogram.utils import executor
-from config import bot, dp
+from config import bot, dp, get_verified_ids
 import logging
 from handlers import fsm_admin, admin, client
 from database.bot_db import sql_create
@@ -7,6 +7,7 @@ import asyncio
 
 async def on_startup(_):
     sql_create()
+    await get_verified_ids()
 
 
 client.register_handlers_client(dp)

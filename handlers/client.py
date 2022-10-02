@@ -5,17 +5,24 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.dispatcher.filters import Text
 from config import bot, dp, regions, ADMINS
 from keyboard.client_cb import regions_markup
-from database.bot_db import sql_command_select_type
+from database.bot_db import sql_command_select_type, sql_command_exists
 
 
 async def start_command(message: types.Message):
-    await bot.send_message(message.chat.id, 'Приветсвтую в Злой бот!', reply_markup=
-                           ReplyKeyboardMarkup(
-                               resize_keyboard=True,
-                               one_time_keyboard=True,
-                           ).add(
-                               KeyboardButton('Пройти регистрацию 📝'), KeyboardButton('Меню 📋')
-                           ))
+    lst: list = await sql_command_exists(message.from_user.id)
+    if len(lst) > 0:
+        await bot.send_message(message.chat.id, 'Злой бот на связи!', reply_markup=
+                               ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(
+                                   KeyboardButton('Изменить анкету 📝'), KeyboardButton('Меню 📋')
+                               ))
+    else:
+        await bot.send_message(message.chat.id, 'Приветсвтую в Злой бот!', reply_markup=
+                               ReplyKeyboardMarkup(
+                                   resize_keyboard=True,
+                                   one_time_keyboard=True,
+                               ).add(
+                                   KeyboardButton('Пройти регистрацию 📝'), KeyboardButton('Меню 📋')
+                               ))
 
 
 async def show_dish_types(message: types.Message):
