@@ -95,7 +95,7 @@ async def load_description(message: types.Message, state: FSMContext):
                                      f"Номер: {data['number']}\n"
                                      f"Регион: {data['region']}\n"
                                      f"Цена: {data['price']}\n"
-                                     f"Описание: {data['price']}\n")
+                                     f"Описание: {data['description']}\n")
     await state.finish()
     await message.answer('Регистрация окончена')
 
