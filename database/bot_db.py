@@ -20,12 +20,10 @@ def sql_create():
 
 async def sql_command_insert(state):
     async with state.proxy() as data:
-        cursor.execute("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?)")
+        cursor.execute("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?)", (data['tg_id'], data['photo'], data['name'], data['number'],
+                                                                             data['region'], data['price'], data['description']))
         db.commit()
 
 
-async def sql_command_random(message):
-    result = cursor.execute("SELECT * FROM products").fetchall()
-    random_product = random.choice(result)
-    await bot.send_photo(message.from_user.id, random_product[1],
-                         caption=f"Имя: {random_product[2]}")
+async def sql_command_select_type(region):
+    return cursor.execute("SELECT * FROM products WHERE region = ?", (region, )).fetchall()

@@ -7,7 +7,7 @@ from config import bot, ADMINS, dp, regions
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from keyboard.client_cb import cancel_markup, regions_markup
-
+from database.bot_db import sql_command_insert
 
 class FSMAdmin(StatesGroup):
     photo = State()
@@ -63,7 +63,7 @@ async def load_region(message: types.Message, state: FSMContext):
             async with state.proxy() as data:
                 data['region'] = message.text
             await FSMAdmin.next()
-            await message.answer('Теперь ценник (нужно вводить просто количество сомов в час)',
+            await message.answer('Прайс:',
                                  reply_markup=cancel_markup)
         else:
             raise ValueError
@@ -84,7 +84,7 @@ async def load_price(message: types.Message, state: FSMContext):
             raise ValueError
     except:
         await message.answer('Такой цены не бывает')
-        await message.answer('Введите цену в сомах в час', reply_markup=cancel_markup)
+        await message.answer('Прайс:', reply_markup=cancel_markup)
 
 
 async def load_description(message: types.Message, state: FSMContext):
@@ -96,11 +96,12 @@ async def load_description(message: types.Message, state: FSMContext):
                                      f"Регион: {data['region']}\n"
                                      f"Цена: {data['price']}\n"
                                      f"Описание: {data['description']}\n")
+    await sql_command_insert(state)
     await state.finish()
     await message.answer('Регистрация окончена')
 
 
-async def cancel_registraion(message: types.Message, state: FSMContext):
+async def cancel_registration(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
         await state.finish()
@@ -108,10 +109,11 @@ async def cancel_registraion(message: types.Message, state: FSMContext):
 
 
 def register_handlers_fsm(dp: Dispatcher):
-    dp.register_message_handler(cancel_registraion, state = "*", commands=['cancel'], commands_prefix=['/!.'])
-    dp.register_message_handler(cancel_registraion,
+    dp.register_message_handler(cancel_registration, state = "*", commands=['cancel'], commands_prefix=['/!.'])
+    dp.register_message_handler(cancel_registration,
                                 Text(equals='cancel', ignore_case=True),state='*')
     dp.register_message_handler(fsm_start, commands=['reg'])
+    dp.register_message_handler(fsm_start, Text(equals=['Пройти регистрацию 📝']))
     dp.register_message_handler(load_photo, state=FSMAdmin.photo, content_types=['photo'])
     dp.register_message_handler(load_name, state=FSMAdmin.name)
     dp.register_message_handler(load_number, state=FSMAdmin.number)
