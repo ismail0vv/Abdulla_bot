@@ -28,6 +28,7 @@ async def fsm_start(message: types.Message):
 
 async def load_photo(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
+        data['tg_id'] = message.from_user.id
         data['photo'] = message.photo[0].file_id
     await FSMAdmin.next()
     await message.answer('Теперь имя: ', reply_markup=cancel_markup)
