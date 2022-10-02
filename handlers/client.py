@@ -36,8 +36,8 @@ async def show_dish_on_type(message: types.Message):
     else:
         for product in result:
             await bot.send_photo(message.from_user.id, photo=product[1],
-                                 caption=f'Имя: {product[2]}, Номер: {product[3]}, '
-                                         f'Регион: {product[4]}, Прайс: {product[5]}\n'
+                                 caption=f'Имя: {product[2]}\nНомер: {product[3]}\n'
+                                         f'Регион: {product[4]}\nПрайс: {product[5]}\n'
                                          f'Описание: {product[6]}')
 
 
