@@ -4,11 +4,14 @@ from decouple import config
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 VERIFIED = []
+
+
 async def get_verified_ids():
     global VERIFIED
     db = sqlite3.connect("bot.sqlite3")
     cursor = db.cursor()
-    VERIFIED: list = cursor.execute("SELECT * FROM verified").fetchall()
+    VERIFIED.extend([i[0] for i in cursor.execute("SELECT * FROM verified").fetchall()])
+
 
 TOKEN = config("TOKEN")
 storage = MemoryStorage()

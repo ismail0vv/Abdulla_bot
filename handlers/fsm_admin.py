@@ -27,7 +27,8 @@ async def fsm_start(message: types.Message):
         else:
             await message.answer('Нельзя регестрироваться в группе!!!')
     else:
-        print('Вы не верифицированы')
+        print(VERIFIED)
+        await message.answer('Вы не верифицированы')
 
 
 async def load_photo(message: types.Message, state: FSMContext):
